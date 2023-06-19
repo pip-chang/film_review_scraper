@@ -60,12 +60,15 @@ class IMDB(Website):
         date = review_block.find("span", class_="review-date").text
         review = review_block.find("div", class_=re.compile("text show-more")).text
         ratio = [int(num) for num in re.findall(r'\d+', review_block.find(string=re.compile(r"found this helpful")).text.strip())]
-        if ratio[1] == 0:
+        all_vote = ratio[1]
+        upvote = ratio[0]
+        downvote = all_vote - upvote
+        if all_vote == 0:
             like_ratio = None
         else:
-            like_ratio = f"{ratio[0]/ratio[1]:.2f}"
+            like_ratio = f"{upvote/all_vote:.2f}"
         permalink = review_block.find("a", string=re.compile("Permalink"))['href']
-        return (date, review, like_ratio, permalink)
+        return (date, review, upvote, all_vote, like_ratio, permalink)
 
     def parse(self, html_source: str) -> List[Tuple]:
         soup = BeautifulSoup(html_source, 'html.parser')
