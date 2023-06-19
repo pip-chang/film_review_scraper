@@ -13,14 +13,9 @@ class IMDBReview:
     review: str
     upvotes: int
     total_votes: int
+    like_ratio: Optional[float]
     permalink: str
-
-    @property
-    def like_ratio(self) -> Optional[float]:
-        if self.total_votes == 0:
-            return None
-        else:
-            return self.upvotes/self.total_votes
+    
 
 class IMDB(Website):
     def __init__(self, config_file: str):
@@ -53,7 +48,11 @@ class IMDB(Website):
         vote_text = review_block.find(string=re.compile(r"found this helpful")).text.strip()
         upvotes, total_votes = map(int, re.findall(r'\d+', vote_text))
         permalink = review_block.find("a", string=re.compile("Permalink"))['href']
-        return IMDBReview(date, review, upvotes, total_votes, permalink)
+        if total_votes == 0:
+            like_ratio = None
+        else:
+            like_ratio = upvotes/total_votes
+        return IMDBReview(date, review, upvotes, total_votes, like_ratio, permalink)
 
     def parse(self, html_source: str) -> List[IMDBReview]:
         soup = BeautifulSoup(html_source, 'html.parser')
