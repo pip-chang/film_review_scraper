@@ -62,7 +62,6 @@ class IMDB(Website):
         ratio = [int(num) for num in re.findall(r'\d+', review_block.find(string=re.compile(r"found this helpful")).text.strip())]
         all_vote = ratio[1]
         upvote = ratio[0]
-        downvote = all_vote - upvote
         if all_vote == 0:
             like_ratio = None
         else:
