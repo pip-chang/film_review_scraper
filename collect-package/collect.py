@@ -58,7 +58,7 @@ class IMDB(Website):
     @staticmethod
     def parse_review_block(review_block: element.Tag):
         date = review_block.find("span", class_="review-date").text
-        review = review_block.find("div", class_=re.compile("text show-more")).text
+        review = review_block.find("div", class_=re.compile(r"text show-more")).text
         ratio = [int(num) for num in re.findall(r'\d+', review_block.find(string=re.compile(r"found this helpful")).text.strip())]
         all_vote = ratio[1]
         upvote = ratio[0]
