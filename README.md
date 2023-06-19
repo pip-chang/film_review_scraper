@@ -1,5 +1,13 @@
 # Collect Reviews from Multiple Websites
 
+# TODO
+
+write config_template.yaml
+
+write instructions on how to use library 'pip install -e .'
+
+# Description
+
 a package for crawling multiple movie websites for reviews
 supported websites: IMDB, Rotten Tomatoes, Letterboxd, Metacritic
 
