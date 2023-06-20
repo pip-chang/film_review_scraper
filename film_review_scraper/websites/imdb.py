@@ -1,58 +1,73 @@
-from dataclasses import dataclass
-from typing import List, Dict, Optional
+from dataclasses import dataclass, field
+from typing import List, Optional, Union
 from time import sleep
+from datetime import datetime
 from bs4 import BeautifulSoup, element
 from selenium import webdriver   
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from .base import Website
 import re
 
 @dataclass
 class IMDBReview:
     date: str
+    rating: Union[str, None]
+    rating_ratio: Union[float, None]
     review: str
     upvotes: int
     total_votes: int
-    like_ratio: Optional[float]
     permalink: str
-    
+    like_ratio: Union[float, int] = field(init=False)
+
+    def __post_init__(self) -> None:
+        if self.total_votes == 0:
+            self.like_ratio = None
+        else:
+            self.like_ratio = self.upvotes/self.total_votes
+
 
 class IMDB(Website):
-    def __init__(self, config_file: str):
-        self.config_file = config_file
-        self.url = None
-    
-    def get_config(self) -> Dict[str, str]:
-        config = Website.get_config(self.config_file)
-        self.url = config.get('Url')
-        return config
-
     def download_html(self, url: str) -> str:
         with webdriver.Chrome() as driver:
             driver.get(url)
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "button[id='load-more-trigger']")))
+            
             loading = True
             while loading:
                 try:
+                    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button[id='load-more-trigger']")))
                     load_more_button = driver.find_element(By.CSS_SELECTOR, "button[id='load-more-trigger']")
-                    load_more_button.click()
                     sleep(2)
+                    load_more_button.click()
                 except Exception as e:
                     loading = False
-                    print(e)
-        return driver.page_source
+                    print(f"Loading completed or an error occurred: {e}")
+            soup = BeautifulSoup(driver.page_source, 'html.parser')
+            return str(soup)
 
     @staticmethod
     def parse_review_block(review_block: element.Tag) -> IMDBReview:
-        date = review_block.find("span", class_="review-date").text
-        review = review_block.find("div", class_=re.compile(r"text show-more")).text
-        vote_text = review_block.find(string=re.compile(r"found this helpful")).text.strip()
-        upvotes, total_votes = map(int, re.findall(r'\d+', vote_text))
-        permalink = review_block.find("a", string=re.compile("Permalink"))['href']
-        if total_votes == 0:
-            like_ratio = None
-        else:
-            like_ratio = upvotes/total_votes
-        return IMDBReview(date, review, upvotes, total_votes, like_ratio, permalink)
+        try:
+            date_string = review_block.find("span", class_="review-date").text
+            dt_object = datetime.strptime(date_string, "%d %B %Y")
+            date = dt_object.strftime("%Y-%m-%d")
+            score = review_block.find(string=re.compile(r'^\d{1,2}$'))
+            if score:
+                rating = f"{score}/10"
+                rating_ratio = float(score)/10
+            else:
+                rating = None
+                rating_ratio = None
+            review = review_block.find("div", class_=re.compile(r"text show-more")).text.strip()
+            vote_text = review_block.find(string=re.compile(r"found this helpful")).text.strip()
+            upvotes, total_votes = map(int, re.findall(r'\d+', vote_text))
+            permalink = review_block.find("a", string=re.compile("Permalink"))['href']
+        except Exception as e:
+            print(review_block)
+            print(f"An error occurred: {e}")
+        return IMDBReview(date, rating, rating_ratio, review, upvotes, total_votes, permalink)
 
     def parse(self, html_source: str) -> List[IMDBReview]:
         soup = BeautifulSoup(html_source, 'html.parser')
