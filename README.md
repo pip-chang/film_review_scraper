@@ -2,9 +2,15 @@
 
 # TODO
 
-write config_template.yaml
+implement Douban
 
 write instructions on how to use library 'pip install -e .'
+
+data storing
+
+tests
+
+docs
 
 # Description
 
@@ -17,7 +23,7 @@ supported websites: IMDB, Rotten Tomatoes, Letterboxd, Metacritic
 
 3. store information in jsonl
 
-# Needed columns:
+# Data need saving (tbc):
 
 Source Type: public review website
 Source: IMDB, RottenTomatoes, Reddit...
