@@ -47,14 +47,11 @@ def save_to_jsonl(objects: List[Type], output_path: Path) -> None:
 class FilmConfig:
     config: Dict = field(default_factory=dict)
 
-    @staticmethod
-    def get_config(config_file: Union[str, Path]) -> Dict:
+    def get_config(self, config_file: Union[str, Path]) -> Dict:
         config_file = Path(config_file)
         if not config_file.exists():
             raise FileNotFoundError(f"Config file not found: {config_file}")
         with open(config_file, mode = "r") as file:
             config = yaml.safe_load(config_file.read_text())
+        self.config = config
         return config
-
-    def load_config(self, config_file: Union[str, Path]) -> None:
-        self.config = self.get_config(config_file)

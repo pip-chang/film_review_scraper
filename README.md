@@ -2,7 +2,7 @@
 
 # TODO
 
-implement Douban
+modify IMDB and RottenTomatoes
 
 write instructions on how to use library 'pip install -e .'
 
