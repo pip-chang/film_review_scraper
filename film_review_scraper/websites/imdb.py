@@ -3,7 +3,7 @@ from typing import List, Optional, Union
 from time import sleep
 from datetime import datetime
 from bs4 import BeautifulSoup, element
-from selenium import webdriver   
+from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -12,13 +12,13 @@ import re
 
 @dataclass
 class IMDBReview:
-    date: str
-    rating: Union[str, None]
-    rating_ratio: Union[float, None]
-    review: str
-    upvotes: int
-    total_votes: int
-    permalink: str
+    date: Optional[str]
+    rating: Optional[str]
+    rating_ratio: Optional[float]
+    review: Optional[str]
+    upvotes: Optional[int]
+    total_votes: Optional[int]
+    permalink: Optional[str]
     like_ratio: Union[float, int] = field(init=False)
 
     def __post_init__(self) -> None:
@@ -29,8 +29,8 @@ class IMDBReview:
 
 
 class IMDB(Website):
-    def download_html(self, url: str) -> str:
-        with webdriver.Chrome() as driver:
+    def fetch_reviews(self, url: str) -> str:
+        with Chrome() as driver:
             driver.get(url)
             WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "button[id='load-more-trigger']")))
             
@@ -60,7 +60,9 @@ class IMDB(Website):
             else:
                 rating = None
                 rating_ratio = None
-            review = review_block.find("div", class_=re.compile(r"text show-more")).text.strip()
+            review_title = review_block.find("a", class_="title").text.strip()
+            review_body = review_block.find("div", class_=re.compile(r"text show-more")).text.strip()
+            review = f"{review_title} {review_body}"
             vote_text = review_block.find(string=re.compile(r"found this helpful")).text.strip()
             upvotes, total_votes = map(int, re.findall(r'\d+', vote_text))
             permalink = review_block.find("a", string=re.compile("Permalink"))['href']
@@ -69,7 +71,7 @@ class IMDB(Website):
             print(f"An error occurred: {e}")
         return IMDBReview(date, rating, rating_ratio, review, upvotes, total_votes, permalink)
 
-    def parse(self, html_source: str) -> List[IMDBReview]:
+    def parse_html(self, html_source: str) -> List[IMDBReview]:
         soup = BeautifulSoup(html_source, 'html.parser')
         review_blocks = soup.find_all("div", class_=re.compile("imdb-user-review"))
         reviews = [self.parse_review_block(review_block) for review_block in review_blocks]

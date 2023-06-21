@@ -1,39 +1,50 @@
+import random
+import logging
+from time import sleep
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, field
-from typing import List, Dict, Union
-from pathlib import Path
-import yaml
+from typing import List, Tuple, TypeVar, Generic
+from selenium.webdriver import Chrome
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.expected_conditions import element_to_be_clickable
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
-@dataclass
-class FilmConfig:
-    config: Dict = field(default_factory=dict)
+logging.basicConfig(level=logging.INFO)
+
+ScrapedReviewType = TypeVar('ScrapedReviewType')
+ParsedReviewType = TypeVar('ParsedReviewType')
+
+MIN_SLEEP = 1
+MAX_SLEEP = 10
+
+class Website(ABC, Generic[ScrapedReviewType, ParsedReviewType]):
 
     @staticmethod
-    def get_config(config_file: Union[str, Path]) -> Dict:
-        config_file = Path(config_file)
-        if not config_file.exists():
-            raise FileNotFoundError(f"Config file not found: {config_file}")
-        with open(config_file, mode = "r") as file:
-            config = yaml.safe_load(config_file.read_text())
-        return config
-
-    def load_config(self, config_file: Union[str, Path]) -> None:
-        self.config = self.get_config(config_file)
-
-class Website(ABC):
+    def remove_duplicates(parsed_reviews: List[ParsedReviewType]) -> List[ParsedReviewType]:
+        pass
+    
     @staticmethod
-    def read_html_file(html_file: Union[str, Path]) -> str:
-        html_file = Path(html_file)
-        if not html_file.exists():
-            raise FileNotFoundError(f"HTML file not found: {html_file}")
-        with open(html_file, mode = "r") as file:
-            html_source = file.read()
-        return html_source
+    def load_next(driver: Chrome, locator: Tuple[By, str]):
+        try:
+            WebDriverWait(driver, 10).until(element_to_be_clickable(locator))
+            load_more_button = driver.find_element(*locator)
+            sleep_time = random.uniform(MIN_SLEEP, MAX_SLEEP)
+            sleep(sleep_time)
+            load_more_button.click()
+        except NoSuchElementException as e:
+            logging.info("No more reviews to load.")
+            raise
+        except TimeoutException as e:
+            logging.info("Timeout occurred.")
+            raise
+        except Exception as e:
+            logging.error(f"An unexpected error occurred: {e}")
+            raise
 
     @abstractmethod
-    def download_html(self) -> str:
+    def fetch_reviews(self, url: str) -> List[ScrapedReviewType]:
         pass
 
     @abstractmethod
-    def parse(self) -> List:
+    def parse_reviews(self, scraped_reviews: List[ScrapedReviewType]) -> List[ParsedReviewType]:
         pass

@@ -17,11 +17,35 @@ docs
 a package for crawling multiple movie websites for reviews
 supported websites: IMDB, Rotten Tomatoes, Letterboxd, Metacritic
 
-1. download html as .html files
+- film_review_scraper
 
-2. parse .html files to extract needed information
+    - websites
 
-3. store information in jsonl
+        fetch review containers: url -> list of review blocks (to be saved or parsed)
+                                        check for missing data
+
+        parse review blocks: review blocks -> dict-like review data (to be saved or organized with other dict-ike objects)
+
+    - data handling
+
+        read html: path html -> html (to be parsed with website parser)
+
+        read_jsonl: path jsonl -> dict-like review data (to be organized with other dict-ike objects)
+
+        save html: dict-like data -> None (save as html)
+
+        save jsonl: dict-like data -> None (save as jsonl)
+
+        read config: path yaml -> dict (to be organized with other dict-ike objects)
+    
+    - data processing
+
+        organize data: dict-like objects -> jsonl? csv? 
+
+    scrape: pipeline for scraping, prganizing and storing
+
+
+
 
 # Data need saving (tbc):
 

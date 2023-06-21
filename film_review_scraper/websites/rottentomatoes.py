@@ -1,9 +1,9 @@
 from dataclasses import dataclass
-from typing import List
+from typing import Optional, List
 from time import sleep
 from datetime import datetime
 from bs4 import BeautifulSoup, element
-from selenium import webdriver   
+from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -12,14 +12,14 @@ import re
 
 @dataclass
 class RottenTomatoesReview:
-    date: str
-    rating: str
-    rating_ratio: float
-    review: str
+    date: Optional[str]
+    rating: Optional[str]
+    rating_ratio: Optional[float]
+    review: Optional[str]
 
 class RottenTomatoes(Website):
     @staticmethod
-    def click_privacy_option(driver: webdriver.Chrome):
+    def click_privacy_option(driver: Chrome):
         WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "onetrust-button-group")))
         privacy_button = driver.find_element(By.ID, "onetrust-button-group")
         privacy_button.click()        
@@ -36,9 +36,9 @@ class RottenTomatoes(Website):
                 soup.html.append(page_wrapper)
         return str(soup)
 
-    def download_html(self, url) -> str:
+    def fetch_reviews(self, url: str) -> str:
         page_sources = []
-        with webdriver.Chrome() as driver:
+        with Chrome() as driver:
             driver.get(url)
             self.click_privacy_option(driver)
             loading = True
@@ -67,7 +67,7 @@ class RottenTomatoes(Website):
         review = review_block.find("p", class_='audience-reviews__review js-review-text').text.strip()
         return RottenTomatoesReview(date, rating, rating_ratio, review)
 
-    def parse(self, html_source: str) -> List[RottenTomatoesReview]:
+    def parse_html(self, html_source: str) -> List[RottenTomatoesReview]:
         soup = BeautifulSoup(html_source, 'html.parser')
         review_blocks = soup.find_all("div", class_=re.compile("audience-review-row"))
         reviews = [self.parse_review_block(review_block) for review_block in review_blocks]
