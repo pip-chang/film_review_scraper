@@ -1,28 +1,32 @@
-import random
 import logging
-from time import sleep
+import random
 from abc import ABC, abstractmethod
+from time import sleep
 from typing import List, Tuple, TypeVar, Generic
+
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.expected_conditions import element_to_be_clickable
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
+
 logging.basicConfig(level=logging.INFO)
 
-ScrapedReviewType = TypeVar('ScrapedReviewType')
-ParsedReviewType = TypeVar('ParsedReviewType')
+ScrapedReviewType = TypeVar("ScrapedReviewType")
+ParsedReviewType = TypeVar("ParsedReviewType")
 
 MIN_SLEEP = 1
 MAX_SLEEP = 10
 
-class Website(ABC, Generic[ScrapedReviewType, ParsedReviewType]):
 
+class Website(ABC, Generic[ScrapedReviewType, ParsedReviewType]):
     @staticmethod
-    def remove_duplicates(parsed_reviews: List[ParsedReviewType]) -> List[ParsedReviewType]:
+    def remove_duplicates(
+        parsed_reviews: List[ParsedReviewType],
+    ) -> List[ParsedReviewType]:
         pass
-    
+
     @staticmethod
     def load_next(driver: Chrome, locator: Tuple[By, str]):
         try:
@@ -46,5 +50,7 @@ class Website(ABC, Generic[ScrapedReviewType, ParsedReviewType]):
         pass
 
     @abstractmethod
-    def parse_reviews(self, review_blocks: List[ScrapedReviewType]) -> List[ParsedReviewType]:
+    def parse_reviews(
+        self, review_blocks: List[ScrapedReviewType]
+    ) -> List[ParsedReviewType]:
         pass

@@ -1,14 +1,15 @@
-from ctypes import Union
-import re
 import logging
-from .base import Website
+import re
 from dataclasses import dataclass, field
-from typing import List, Optional, Literal
 from datetime import datetime
+from typing import List, Optional, Literal
+
 from bs4 import BeautifulSoup
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
+
+from .base import Website
 
 
 logging.basicConfig(level=logging.INFO)
@@ -192,12 +193,11 @@ class Douban(Website):
 
         review_title_element = review_block.find("span", property="v:summary")
         review_title = (
-            review_title_element.text.strip() if review_title_element else None
+            review_title_element.text.strip() if review_title_element else ''
         )
-        review_element = review_block.find("div", class_="review-content clearfix")
-        review = review_element.text if review_element else None
-        if review_title:
-            review = f"{review_title} {review}"
+        review_body_element = review_block.find("div", class_="review-content clearfix")
+        review_body = review_body_element.text if review_body_element else ''
+        review = f"{review_title}: {review_body}"
 
         votes_element = review_block.find("div", class_="main-bd")
         if votes_element and votes_element.get("data-ad-ext"):

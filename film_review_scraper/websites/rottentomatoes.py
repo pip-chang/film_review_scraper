@@ -1,15 +1,16 @@
-import re
 import logging
+import re
 from dataclasses import dataclass
-from typing import Optional, List
-from time import sleep
 from datetime import datetime
-from bs4 import BeautifulSoup, element
+from typing import Optional, List
+
+from bs4 import BeautifulSoup
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
+
 from .base import Website
 
 logging.basicConfig(level=logging.INFO)
@@ -73,7 +74,7 @@ class RottenTomatoes(Website):
 
         full_stars = len(review_block.find_all("span", class_="star-display__filled"))
         half_stars = len(review_block.find_all("span", class_="star-display__half"))
-        score = float(full_stars) + float(half_stars) * 0.5
+        score = full_stars + half_stars * 0.5
         rating = f"{score}/5"
         rating_ratio = score / 5
 
