@@ -23,9 +23,11 @@ class DoubanReview:
     review: Optional[str]
     upvotes: Optional[int]
 
+
 @dataclass
 class DoubanShortReview(DoubanReview):
     pass
+
 
 @dataclass
 class DoubanLongReview(DoubanReview):
@@ -75,7 +77,9 @@ class Douban(Website):
             ]
         return review_links
 
-    def fetch_long_review_block_from_link(self, driver: Chrome, review_link: str) -> BeautifulSoup:
+    def fetch_long_review_block_from_link(
+        self, driver: Chrome, review_link: str
+    ) -> BeautifulSoup:
         driver.get(review_link)
         load_more_buttons = driver.find_elements(By.CLASS_NAME, "give-me-more")
 
@@ -110,7 +114,9 @@ class Douban(Website):
                 except (NoSuchElementException, TimeoutException):
                     break
             for review_link in total_review_links:
-                review_block = self.fetch_long_review_block_from_link(driver, review_link)
+                review_block = self.fetch_long_review_block_from_link(
+                    driver, review_link
+                )
                 total_review_blocks.append(review_block)
         return total_review_blocks
 

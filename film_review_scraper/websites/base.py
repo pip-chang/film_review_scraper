@@ -46,5 +46,5 @@ class Website(ABC, Generic[ScrapedReviewType, ParsedReviewType]):
         pass
 
     @abstractmethod
-    def parse_reviews(self, scraped_reviews: List[ScrapedReviewType]) -> List[ParsedReviewType]:
+    def parse_reviews(self, review_blocks: List[ScrapedReviewType]) -> List[ParsedReviewType]:
         pass

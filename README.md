@@ -14,7 +14,7 @@ docs
 
 # Description
 
-a package for crawling multiple movie websites for reviews
+a package for crawling multiple movie websites for *audience* reviews
 supported websites: IMDB, Rotten Tomatoes, Letterboxd, Metacritic
 
 - film_review_scraper
