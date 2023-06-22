@@ -1,5 +1,5 @@
-from film_review_scraper.websites import IMDB, RottenTomatoes, Douban
-from film_review_scraper.data_handeling import save_to_html, save_to_jsonl, get_output_path
+from websites import IMDB, RottenTomatoes, Douban
+from data_handling import save_to_html, save_to_jsonl, get_output_path
 from pathlib import Path
 
 def imdb_parse():
