@@ -1,24 +1,24 @@
 website: imdb
 url: https://www.imdb.com/title/tt7131870/reviews?sort=submissionDate&dir=asc&ratingFilter=0
-film Type: 
+film_type: 
   - action
   - adventure
   - drama
-reviewer type: audience
+reviewer_type: audience
 film: Wolf Warrior 2
-Theater Release Date: 2017-07-28
-Streaming Release Date: 2017-12-12
-Director: Jing Wu
-Production Companies:
+theater_release_date: 2017-07-28
+streaming_release_date: 2017-12-12
+director: Jing Wu
+production_companies:
   - China Film Group
   - Beijing Culture
   - Bona Film Group
-Country: 
+country: 
   - China
-International Collaboration: 
+international_collaboration: 
   - False
-Language: 
+language: 
   - cn
   - en
-Budget: 30,000,000
-Box Office: 874,000,000
+budget: 30,000,000
+box_office: 874,000,000

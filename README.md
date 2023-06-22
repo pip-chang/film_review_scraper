@@ -2,8 +2,6 @@
 
 # TODO
 
-modify IMDB and RottenTomatoes
-
 write instructions on how to use library 'pip install -e .'
 
 data storing
@@ -11,6 +9,8 @@ data storing
 tests
 
 docs
+
+pipeline
 
 # Description
 
