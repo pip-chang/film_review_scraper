@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 from typing import Literal, Union, Optional, Type, Dict, List
 from dataclasses import asdict, is_dataclass, dataclass, field
 import json
+import yaml
 
 def get_output_path(folder_path: str, file_name: str, file_type: Literal['html', 'jsonl']) -> Path:
     folder_path = Path(folder_path)
@@ -52,6 +53,6 @@ class FilmConfig:
         if not config_file.exists():
             raise FileNotFoundError(f"Config file not found: {config_file}")
         with open(config_file, mode = "r") as file:
-            config = yaml.safe_load(config_file.read_text())
+            config = yaml.safe_load(file)
         self.config = config
         return config
