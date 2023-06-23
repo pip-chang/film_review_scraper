@@ -7,7 +7,7 @@ from typing import List, Optional, Literal
 from bs4 import BeautifulSoup
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.common.exceptions import TimeoutException
 
 from .base import Website
 
@@ -52,6 +52,7 @@ class Douban(Website):
 
             while True:
                 try:
+                    self.load_element(driver, (By.CLASS_NAME, "comment-item"))
                     page_source = BeautifulSoup(driver.page_source, "html.parser")
                     if len(page_source.find_all("div", class_="comment-item")) != 1:
                         review_blocks = page_source.find_all(
@@ -62,7 +63,7 @@ class Douban(Website):
                     else:
                         logging.info("No more reviews to load.")
                         break
-                except (NoSuchElementException, TimeoutException):
+                except TimeoutException:
                     break
         return total_review_blocks
 
@@ -82,13 +83,18 @@ class Douban(Website):
         self, driver: Chrome, review_link: str
     ) -> BeautifulSoup:
         driver.get(review_link)
-        load_more_buttons = driver.find_elements(By.CLASS_NAME, "give-me-more")
-
+        load_more_buttons = []
+        try:
+            self.load_element(driver, (By.CLASS_NAME, "give-me-more"))
+            load_more_buttons = driver.find_elements(By.CLASS_NAME, "give-me-more")
+        except TimeoutException as e:
+            logging.info(f"No folded comments.")
+            
         if load_more_buttons:
             for _ in load_more_buttons:
                 try:
                     self.load_next(driver, (By.CLASS_NAME, "give-me-more"))
-                except (NoSuchElementException, TimeoutException):
+                except TimeoutException:
                     break
 
         page_source = BeautifulSoup(driver.page_source, "html.parser")
@@ -104,6 +110,7 @@ class Douban(Website):
             driver.get(url)
             while True:
                 try:
+                    self.load_element(driver, (By.TAG_NAME, "h2"))
                     page_source = BeautifulSoup(driver.page_source, "html.parser")
                     review_links = self.fetch_long_review_links(page_source)
                     if review_links:
@@ -112,7 +119,7 @@ class Douban(Website):
                     else:
                         logging.info("No more reviews to load.")
                         break
-                except (NoSuchElementException, TimeoutException):
+                except TimeoutException:
                     break
             for review_link in total_review_links:
                 review_block = self.fetch_long_review_block_from_link(

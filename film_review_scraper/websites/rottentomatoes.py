@@ -9,7 +9,7 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.common.exceptions import TimeoutException
 
 from .base import Website
 
@@ -33,11 +33,8 @@ class RottenTomatoes(Website):
             )
             privacy_button = driver.find_element(By.ID, "onetrust-button-group")
             privacy_button.click()
-        except NoSuchElementException as e:
-            logging.info(f"No privacy button to press: {e}")
-            raise
         except TimeoutException as e:
-            logging.info("Timeout occurred.")
+            logging.info("No privacy button to press.")
             raise
         except Exception as e:
             logging.error(f"An unexpected error occurred: {e}")
@@ -51,13 +48,14 @@ class RottenTomatoes(Website):
 
             while True:
                 try:
+                    self.load_element(driver, (By.CLASS_NAME, "audience-review-row"))
                     page_source = BeautifulSoup(driver.page_source, "html.parser")
                     review_blocks = page_source.find_all(
-                        "div", class_=re.compile("audience-review-row")
+                        "div", class_="audience-review-row"
                     )
                     total_review_blocks += review_blocks
                     self.load_next(driver, (By.CLASS_NAME, "next"))
-                except (NoSuchElementException, TimeoutException):
+                except TimeoutException:
                     break
 
         return total_review_blocks

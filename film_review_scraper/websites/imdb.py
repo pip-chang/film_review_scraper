@@ -6,7 +6,7 @@ import re
 from bs4 import BeautifulSoup
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.common.exceptions import TimeoutException
 
 from .base import Website
 
@@ -36,11 +36,10 @@ class IMDB(Website):
             driver.get(url)
             while True:
                 try:
-                    self.load_next(
-                        driver, (By.CSS_SELECTOR, "button[id='load-more-trigger']")
-                    )
-                except (NoSuchElementException, TimeoutException):
+                    self.load_next(driver, (By.CLASS_NAME, "ipl-load-more__button"))
+                except TimeoutException:
                     break
+            self.load_element(driver, (By.CLASS_NAME, "imdb-user-review"))
             page_source = BeautifulSoup(driver.page_source, "html.parser")
             total_review_blocks = page_source.find_all(
                 "div", class_=re.compile("imdb-user-review")

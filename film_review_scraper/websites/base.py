@@ -1,5 +1,6 @@
 import logging
 import random
+import time
 from abc import ABC, abstractmethod
 from time import sleep
 from typing import List, Tuple, TypeVar, Generic
@@ -7,8 +8,8 @@ from typing import List, Tuple, TypeVar, Generic
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support.expected_conditions import element_to_be_clickable
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 
 
 logging.basicConfig(level=logging.INFO)
@@ -16,6 +17,8 @@ logging.basicConfig(level=logging.INFO)
 ScrapedReviewType = TypeVar("ScrapedReviewType")
 ParsedReviewType = TypeVar("ParsedReviewType")
 
+WAIT_TIME_LOAD = 30
+WAIT_TIME_CLICK = 10
 MIN_SLEEP = 1
 MAX_SLEEP = 10
 
@@ -28,18 +31,31 @@ class Website(ABC, Generic[ScrapedReviewType, ParsedReviewType]):
         pass
 
     @staticmethod
+    def load_element(driver: Chrome, locator: Tuple[By, str]):
+        try:
+            WebDriverWait(driver, WAIT_TIME_LOAD).until(EC.presence_of_element_located(locator))
+        except TimeoutException as e:
+            logging.info(f"No such elements.")
+            raise
+        except Exception as e:
+            logging.error(f"An unexpected error occurred: {e}")
+            raise
+
+
+    @staticmethod
     def load_next(driver: Chrome, locator: Tuple[By, str]):
         try:
-            WebDriverWait(driver, 10).until(element_to_be_clickable(locator))
+            current_page_source = driver.page_source
+            WebDriverWait(driver, WAIT_TIME_CLICK).until(EC.element_to_be_clickable(locator))
             load_more_button = driver.find_element(*locator)
             sleep_time = random.uniform(MIN_SLEEP, MAX_SLEEP)
             sleep(sleep_time)
             load_more_button.click()
-        except NoSuchElementException as e:
-            logging.info("No more reviews to load.")
-            raise
+            new_page_source = driver.page_source
+            if new_page_source == current_page_source:
+                raise TimeoutException
         except TimeoutException as e:
-            logging.info("Timeout occurred.")
+            logging.info("No more content to load.")
             raise
         except Exception as e:
             logging.error(f"An unexpected error occurred: {e}")
