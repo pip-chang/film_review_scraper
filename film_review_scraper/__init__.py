@@ -1,1 +1,1 @@
-from .websites import IMDB, RottenTomatoes
+from .websites import IMDB, RottenTomatoes, Douban
