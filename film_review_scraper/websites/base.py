@@ -33,7 +33,9 @@ class Website(ABC, Generic[ScrapedReviewType, ParsedReviewType]):
     @staticmethod
     def load_element(driver: Chrome, locator: Tuple[By, str]):
         try:
-            WebDriverWait(driver, WAIT_TIME_LOAD).until(EC.presence_of_element_located(locator))
+            WebDriverWait(driver, WAIT_TIME_LOAD).until(
+                EC.presence_of_element_located(locator)
+            )
         except TimeoutException as e:
             logging.info(f"No such elements.")
             raise
@@ -41,12 +43,13 @@ class Website(ABC, Generic[ScrapedReviewType, ParsedReviewType]):
             logging.error(f"An unexpected error occurred: {e}")
             raise
 
-
     @staticmethod
     def load_next(driver: Chrome, locator: Tuple[By, str]):
         try:
             current_page_source = driver.page_source
-            WebDriverWait(driver, WAIT_TIME_CLICK).until(EC.element_to_be_clickable(locator))
+            WebDriverWait(driver, WAIT_TIME_CLICK).until(
+                EC.element_to_be_clickable(locator)
+            )
             load_more_button = driver.find_element(*locator)
             sleep_time = random.uniform(MIN_SLEEP, MAX_SLEEP)
             sleep(sleep_time)

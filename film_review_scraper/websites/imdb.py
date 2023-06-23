@@ -21,6 +21,7 @@ class IMDBReview:
     total_votes: Optional[int]
     permalink: Optional[str]
     like_ratio: Union[float, int] = field(init=False)
+    website: str = "IMDB"
 
     def __post_init__(self) -> None:
         if self.total_votes == 0:

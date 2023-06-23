@@ -1,7 +1,6 @@
 from ast import parse
 from websites import IMDB, RottenTomatoes, Douban
-from data_handling import save_to_html, save_to_jsonl, get_output_path
-from pathlib import Path
+from data_handling import get_output_path, save_dataclass_to_jsonl
 
 
 def imdb_download():
@@ -15,7 +14,7 @@ def imdb_download():
         file_name="imdb_Wolf_Warrior",
         file_type="jsonl",
     )
-    save_to_jsonl(objects=reviews, output_path=output_path)
+    save_dataclass_to_jsonl(objects=reviews, output_path=output_path)
 
 
 def rt_download():
@@ -29,7 +28,7 @@ def rt_download():
         file_name="rt_Last_Tycoon",
         file_type="jsonl",
     )
-    save_to_jsonl(objects=reviews, output_path=output_path)
+    save_dataclass_to_jsonl(objects=reviews, output_path=output_path)
 
 
 def db_download_short():
@@ -44,7 +43,7 @@ def db_download_short():
         file_name="The_Last_Tycoon",
         file_type="jsonl",
     )
-    save_to_jsonl(objects=reviews, output_path=output_path)
+    save_dataclass_to_jsonl(objects=reviews, output_path=output_path)
 
 
 def db_download_long():
@@ -59,7 +58,7 @@ def db_download_long():
         file_name="Last_Days",
         file_type="jsonl",
     )
-    save_to_jsonl(objects=reviews, output_path=output_path)
+    save_dataclass_to_jsonl(objects=reviews, output_path=output_path)
 
 
 if __name__ == "__main__":

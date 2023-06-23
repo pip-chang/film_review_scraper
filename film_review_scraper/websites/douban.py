@@ -1,7 +1,6 @@
 import logging
 import re
 from dataclasses import dataclass, field
-from datetime import datetime
 from typing import List, Optional, Literal
 
 from bs4 import BeautifulSoup
@@ -27,7 +26,7 @@ class DoubanReview:
 
 @dataclass
 class DoubanShortReview(DoubanReview):
-    pass
+    website: str = "Douban"
 
 
 @dataclass
@@ -36,6 +35,7 @@ class DoubanLongReview(DoubanReview):
     permalink: Optional[str]
     comments: List[str]
     like_ratio: Optional[float] = field(init=False)
+    website: str = "Douban"
 
     def __post_init__(self) -> None:
         if self.total_votes == 0:

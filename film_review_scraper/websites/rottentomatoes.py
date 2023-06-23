@@ -22,6 +22,7 @@ class RottenTomatoesReview:
     rating: Optional[str]
     rating_ratio: Optional[float]
     review: Optional[str]
+    website: str = "Rotten Tomatoes"
 
 
 class RottenTomatoes(Website):
