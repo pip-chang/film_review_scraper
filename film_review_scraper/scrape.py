@@ -11,7 +11,6 @@ from data_handling import (
     get_files_in_folder,
     get_output_path,
     save_dataclass_to_jsonl,
-    read_jsonl_to_dict,
 )
 from data_processing import FilmData, ReviewData, merge_film_and_review_data
 
@@ -26,6 +25,7 @@ REVIEW_OUTPUT_FOLDER = "/Users/pipchang/Documents/VSC/Projects/DH-S/the_last_tyc
 FILM_DATA_FILE = (
     "/Users/pipchang/Documents/VSC/Projects/DH-S/the_last_tycoon/the_last_tycoon.yaml"
 )
+
 
 def imdb_download(film_name: str, url: str, output_folder: str):
     page = IMDB()
@@ -75,7 +75,9 @@ def export_all_data_to_jsonl(input_folder: str, output_folder: str, file_name: s
         folder_path=input_folder, film_name=film_data.name
     )
     all_data = merge_film_and_review_data(film_data=film_data, review_data=review_data)
-    output_path = get_output_path(folder_path=output_folder, file_name=file_name, file_type="jsonl")
+    output_path = get_output_path(
+        folder_path=output_folder, file_name=file_name, file_type="jsonl"
+    )
     save_dicts_to_jsonl(list_of_dicts=all_data, output_path=output_path)
 
 
@@ -97,5 +99,8 @@ if __name__ == "__main__":
     )
 
     # merge
-    export_all_data_to_jsonl(input_folder=REVIEW_OUTPUT_FOLDER, output_folder=REVIEW_OUTPUT_FOLDER, file_name="the_last_tycoon")
-
+    export_all_data_to_jsonl(
+        input_folder=REVIEW_OUTPUT_FOLDER,
+        output_folder=REVIEW_OUTPUT_FOLDER,
+        file_name="the_last_tycoon",
+    )
