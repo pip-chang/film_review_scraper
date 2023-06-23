@@ -4,8 +4,6 @@
 
 write instructions on how to use library 'pip install -e .'
 
-data storing
-
 tests
 
 docs
