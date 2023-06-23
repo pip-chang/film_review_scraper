@@ -4,11 +4,13 @@
 
 write instructions on how to use library 'pip install -e .'
 
+scaling issue - timeout retries, checkpoints
+
 tests
 
 docs
 
-pipeline
+better pipeline
 
 # Description
 
