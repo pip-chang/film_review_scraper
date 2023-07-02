@@ -89,7 +89,7 @@ class Douban(Website):
             load_more_buttons = driver.find_elements(By.CLASS_NAME, "give-me-more")
         except TimeoutException as e:
             logging.info(f"No folded comments.")
-            
+
         if load_more_buttons:
             for _ in load_more_buttons:
                 try:
@@ -199,11 +199,9 @@ class Douban(Website):
             rating_ratio = None
 
         review_title_element = review_block.find("span", property="v:summary")
-        review_title = (
-            review_title_element.text.strip() if review_title_element else ''
-        )
+        review_title = review_title_element.text.strip() if review_title_element else ""
         review_body_element = review_block.find("div", class_="review-content clearfix")
-        review_body = review_body_element.text if review_body_element else ''
+        review_body = review_body_element.text if review_body_element else ""
         review = f"{review_title}: {review_body}"
 
         votes_element = review_block.find("div", class_="main-bd")

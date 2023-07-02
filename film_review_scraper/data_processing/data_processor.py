@@ -5,7 +5,6 @@ import yaml
 
 from data_handling import read_jsonl_to_dict, get_files_in_folder
 
-    
 
 @dataclass
 class FilmData:
@@ -44,13 +43,13 @@ class ReviewData:
         ]
         return ReviewData(name=film_name, data=concatenated_data)
 
-def merge_film_and_review_data(film_data: FilmData, review_data: ReviewData) -> List[Dict]:
+
+def merge_film_and_review_data(
+    film_data: FilmData, review_data: ReviewData
+) -> List[Dict]:
     merged_data = []
     film = film_data.data
     for review in review_data.data:
         merged = film | review
         merged_data.append(merged)
     return merged_data
-
-
-        
