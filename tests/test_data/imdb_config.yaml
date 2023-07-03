@@ -1,6 +1,6 @@
 website: imdb
 url: https://www.imdb.com/title/tt7131870/reviews?sort=submissionDate&dir=asc&ratingFilter=0
-film Type: 
+film Type:
   - action
   - adventure
   - drama
@@ -13,11 +13,11 @@ Production Companies:
   - China Film Group
   - Beijing Culture
   - Bona Film Group
-Country: 
+Country:
   - China
-International Collaboration: 
+International Collaboration:
   - False
-Language: 
+Language:
   - cn
   - en
 Budget: 30,000,000
