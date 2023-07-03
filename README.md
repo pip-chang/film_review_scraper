@@ -44,9 +44,6 @@ supported websites: IMDB, Rotten Tomatoes, Letterboxd, Metacritic
 
     scrape: pipeline for scraping, prganizing and storing
 
-
-
-
 # Data need saving (tbc):
 
 Source Type: public review website
