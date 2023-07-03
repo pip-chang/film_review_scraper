@@ -37,10 +37,10 @@ supported websites: IMDB, Rotten Tomatoes, Letterboxd, Metacritic
         save jsonl: dict-like data -> None (save as jsonl)
 
         read config: path yaml -> dict (to be organized with other dict-ike objects)
-
+    
     - data processing
 
-        organize data: dict-like objects -> jsonl? csv?
+        organize data: dict-like objects -> jsonl? csv? 
 
     scrape: pipeline for scraping, prganizing and storing
 
@@ -67,7 +67,7 @@ Film: film_name in English
 Theater Release Date: 00-00-0000
 Streaming Release Date: 00-00-0000
 Director: name
-Production Companies:
+Production Companies: 
 Country: China, US
 International Collaboration: True, False
 Language: en, cn
@@ -77,3 +77,4 @@ Box Office: (in dollar)
 
 For other sources:
 SourceType: journalism, social media, review websites, magazines...
+

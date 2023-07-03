@@ -1,6 +1,6 @@
 from ast import parse
-from film_review_scraper.websites import IMDB, RottenTomatoes, Douban
-from film_review_scraper.data_handling import get_output_path, save_dataclass_to_jsonl
+from websites import IMDB, RottenTomatoes, Douban
+from data_handling import get_output_path, save_dataclass_to_jsonl
 
 
 def imdb_download():

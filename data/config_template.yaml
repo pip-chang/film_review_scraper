@@ -1,4 +1,4 @@
-film_type:
+film_type: 
   - action
   - adventure
   - drama
@@ -11,11 +11,11 @@ production_companies:
   - China Film Group
   - Beijing Culture
   - Bona Film Group
-country:
+country: 
   - China
-international_collaboration:
+international_collaboration: 
   - False
-language:
+language: 
   - cn
   - en
 budget: 30,000,000

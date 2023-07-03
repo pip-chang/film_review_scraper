@@ -9,9 +9,8 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException, SessionNotCreatedException
-from selenium.webdriver.chrome.service import Service as ChromeService
-from webdriver_manager.chrome import ChromeDriverManager
+from selenium.common.exceptions import TimeoutException
+
 from .base import Website
 
 logging.basicConfig(level=logging.INFO)
@@ -44,11 +43,6 @@ class RottenTomatoes(Website):
 
     def fetch_reviews(self, url: str) -> List[BeautifulSoup]:
         total_review_blocks = []
-        try:
-            Chrome()
-        except SessionNotCreatedException:
-            print("Could not init Chrome driver - trying to fetch required version...")
-            Chrome(service=ChromeService(ChromeDriverManager().install()))
         with Chrome() as driver:
             driver.get(url)
             self.click_privacy_option(driver)
