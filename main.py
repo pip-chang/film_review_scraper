@@ -25,7 +25,7 @@ def rt_download():
     reviews = page.parse_reviews(review_blocks)
     output_path = get_output_path(
         folder_path="/Users/pipchang/Documents/VSC/Projects/DH-S/download",
-        file_name="rt_Last_Tycoon",
+        file_name="rt_Last_Tycoon_test",
         file_type="jsonl",
     )
     save_dataclass_to_jsonl(objects=reviews, output_path=output_path)

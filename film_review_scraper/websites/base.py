@@ -9,7 +9,11 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import (
+    TimeoutException,
+    NoSuchElementException,
+    ElementNotInteractableException,
+)
 
 
 logging.basicConfig(level=logging.INFO)
@@ -37,7 +41,10 @@ class Website(ABC, Generic[ScrapedReviewType, ParsedReviewType]):
                 EC.presence_of_element_located(locator)
             )
         except TimeoutException as e:
-            logging.info(f"No such elements.")
+            logging.info("Timeout occured: no element found in time limit.")
+            raise
+        except NoSuchElementException as e:
+            logging.info("No content found.")
             raise
         except Exception as e:
             logging.error(f"An unexpected error occurred: {e}")
@@ -58,7 +65,10 @@ class Website(ABC, Generic[ScrapedReviewType, ParsedReviewType]):
             if new_page_source == current_page_source:
                 raise TimeoutException
         except TimeoutException as e:
-            logging.info("No more content to load.")
+            logging.info("Timeout occured: no next button found in time limit.")
+            raise
+        except (NoSuchElementException, ElementNotInteractableException) as e:
+            logging.info("No next button found.")
             raise
         except Exception as e:
             logging.error(f"An unexpected error occurred: {e}")

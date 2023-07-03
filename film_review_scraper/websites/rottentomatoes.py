@@ -9,7 +9,12 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException, SessionNotCreatedException
+from selenium.common.exceptions import (
+    TimeoutException,
+    NoSuchElementException,
+    ElementNotInteractableException,
+    SessionNotCreatedException,
+)
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from .base import Website
@@ -36,8 +41,10 @@ class RottenTomatoes(Website):
             privacy_button = driver.find_element(By.ID, "onetrust-button-group")
             privacy_button.click()
         except TimeoutException as e:
-            logging.info("No privacy button to press.")
+            logging.info("Timeout occured: privacy button not found in time limit.")
             raise
+        except (NoSuchElementException, ElementNotInteractableException) as e:
+            logging.info("No privacy button to click.")
         except Exception as e:
             logging.error(f"An unexpected error occurred: {e}")
             raise
@@ -62,7 +69,11 @@ class RottenTomatoes(Website):
                     )
                     total_review_blocks += review_blocks
                     self.load_next(driver, (By.CLASS_NAME, "next"))
-                except TimeoutException:
+                except (
+                    TimeoutException,
+                    NoSuchElementException,
+                    ElementNotInteractableException,
+                ):
                     break
 
         return total_review_blocks
