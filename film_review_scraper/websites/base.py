@@ -19,7 +19,6 @@ from selenium.common.exceptions import (
 )
 
 
-
 logging.basicConfig(level=logging.INFO)
 
 ScrapedReviewType = TypeVar("ScrapedReviewType")
