@@ -1,6 +1,5 @@
 import logging
 import random
-import time
 from abc import ABC, abstractmethod
 from time import sleep
 from typing import List, Tuple, TypeVar, Generic
@@ -8,12 +7,17 @@ from typing import List, Tuple, TypeVar, Generic
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.common.exceptions import (
     TimeoutException,
     NoSuchElementException,
     ElementNotInteractableException,
+    SessionNotCreatedException,
 )
+
 
 
 logging.basicConfig(level=logging.INFO)
@@ -33,6 +37,21 @@ class Website(ABC, Generic[ScrapedReviewType, ParsedReviewType]):
         parsed_reviews: List[ParsedReviewType],
     ) -> List[ParsedReviewType]:
         pass
+
+    @staticmethod
+    def initiate_chrome(headless_mode: bool) -> Chrome:
+        chrome_options = Options()
+        if headless_mode:
+            chrome_options.add_argument("--headless=new")
+        try:
+            driver = Chrome(options=chrome_options)
+        except SessionNotCreatedException:
+            print("Could not init Chrome driver - trying to fetch required version...")
+            driver = Chrome(
+                service=ChromeService(ChromeDriverManager().install()),
+                options=chrome_options,
+            )
+        return driver
 
     @staticmethod
     def load_element(driver: Chrome, locator: Tuple[By, str]):

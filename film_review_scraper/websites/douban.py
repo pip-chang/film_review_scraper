@@ -1,12 +1,16 @@
 import logging
 import re
 from dataclasses import dataclass, field
-from typing import List, Optional, Literal
+from typing import List, Optional, Literal, final
 
 from bs4 import BeautifulSoup
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import (
+    TimeoutException,
+    NoSuchElementException,
+    ElementNotInteractableException,
+)
 
 from .base import Website
 
@@ -45,26 +49,32 @@ class DoubanLongReview(DoubanReview):
 
 
 class Douban(Website):
-    def fetch_short_review_blocks(self, url: str) -> List[BeautifulSoup]:
+    def fetch_short_review_blocks(
+        self, url: str, headless_mode: bool = False
+    ) -> List[BeautifulSoup]:
         total_review_blocks = []
-        with Chrome() as driver:
-            driver.get(url)
+        driver = self.initiate_chrome(headless_mode=headless_mode)
+        driver.get(url)
 
-            while True:
-                try:
-                    self.load_element(driver, (By.CLASS_NAME, "comment-item"))
-                    page_source = BeautifulSoup(driver.page_source, "html.parser")
-                    if len(page_source.find_all("div", class_="comment-item")) != 1:
-                        review_blocks = page_source.find_all(
-                            "div", class_="comment-item"
-                        )
-                        total_review_blocks += review_blocks
-                        self.load_next(driver, (By.CLASS_NAME, "next"))
-                    else:
-                        logging.info("No more reviews to load.")
-                        break
-                except TimeoutException:
+        while True:
+            try:
+                self.load_element(driver, (By.CLASS_NAME, "comment-item"))
+                page_source = BeautifulSoup(driver.page_source, "html.parser")
+                if len(page_source.find_all("div", class_="comment-item")) != 1:
+                    review_blocks = page_source.find_all("div", class_="comment-item")
+                    total_review_blocks += review_blocks
+                    self.load_next(driver, (By.CLASS_NAME, "next"))
+                else:
+                    logging.info("No more reviews to load.")
                     break
+            except (
+                TimeoutException,
+                NoSuchElementException,
+                ElementNotInteractableException,
+            ):
+                break
+        driver.quit()
+
         return total_review_blocks
 
     @staticmethod
@@ -87,14 +97,18 @@ class Douban(Website):
         try:
             self.load_element(driver, (By.CLASS_NAME, "give-me-more"))
             load_more_buttons = driver.find_elements(By.CLASS_NAME, "give-me-more")
-        except TimeoutException as e:
+        except (TimeoutException, NoSuchElementException) as e:
             logging.info(f"No folded comments.")
 
         if load_more_buttons:
             for _ in load_more_buttons:
                 try:
                     self.load_next(driver, (By.CLASS_NAME, "give-me-more"))
-                except TimeoutException:
+                except (
+                    TimeoutException,
+                    NoSuchElementException,
+                    ElementNotInteractableException,
+                ):
                     break
 
         page_source = BeautifulSoup(driver.page_source, "html.parser")
@@ -103,29 +117,37 @@ class Douban(Website):
         review_block.append(link_tag)
         return review_block
 
-    def fetch_long_review_blocks(self, url: str) -> List[BeautifulSoup]:
+    def fetch_long_review_blocks(
+        self, url: str, headless_mode: bool = False
+    ) -> List[BeautifulSoup]:
         total_review_links = []
         total_review_blocks = []
-        with Chrome() as driver:
-            driver.get(url)
-            while True:
-                try:
-                    self.load_element(driver, (By.TAG_NAME, "h2"))
-                    page_source = BeautifulSoup(driver.page_source, "html.parser")
-                    review_links = self.fetch_long_review_links(page_source)
-                    if review_links:
-                        total_review_links += review_links
-                        self.load_next(driver, (By.CLASS_NAME, "next"))
-                    else:
-                        logging.info("No more reviews to load.")
-                        break
-                except TimeoutException:
+        driver = self.initiate_chrome(headless_mode=headless_mode)
+        driver.get(url)
+
+        while True:
+            try:
+                self.load_element(driver, (By.TAG_NAME, "h2"))
+                page_source = BeautifulSoup(driver.page_source, "html.parser")
+                review_links = self.fetch_long_review_links(page_source)
+                if review_links:
+                    total_review_links += review_links
+                    self.load_next(driver, (By.CLASS_NAME, "next"))
+                else:
+                    logging.info("No more reviews to load.")
                     break
-            for review_link in total_review_links:
-                review_block = self.fetch_long_review_block_from_link(
-                    driver, review_link
-                )
-                total_review_blocks.append(review_block)
+            except (
+                TimeoutException,
+                NoSuchElementException,
+                ElementNotInteractableException,
+            ):
+                break
+
+        for review_link in total_review_links:
+            review_block = self.fetch_long_review_block_from_link(driver, review_link)
+            total_review_blocks.append(review_block)
+
+        driver.quit()
         return total_review_blocks
 
     def fetch_reviews(

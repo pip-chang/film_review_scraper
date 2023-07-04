@@ -13,10 +13,8 @@ from selenium.common.exceptions import (
     TimeoutException,
     NoSuchElementException,
     ElementNotInteractableException,
-    SessionNotCreatedException,
 )
-from selenium.webdriver.chrome.service import Service as ChromeService
-from webdriver_manager.chrome import ChromeDriverManager
+
 from .base import Website
 
 logging.basicConfig(level=logging.INFO)
@@ -45,36 +43,36 @@ class RottenTomatoes(Website):
             raise
         except (NoSuchElementException, ElementNotInteractableException) as e:
             logging.info("No privacy button to click.")
+            raise
         except Exception as e:
             logging.error(f"An unexpected error occurred: {e}")
             raise
 
-    def fetch_reviews(self, url: str) -> List[BeautifulSoup]:
+    def fetch_reviews(
+        self, url: str, headless_mode: bool = False
+    ) -> List[BeautifulSoup]:
         total_review_blocks = []
-        try:
-            Chrome()
-        except SessionNotCreatedException:
-            print("Could not init Chrome driver - trying to fetch required version...")
-            Chrome(service=ChromeService(ChromeDriverManager().install()))
-        with Chrome() as driver:
-            driver.get(url)
-            self.click_privacy_option(driver)
+        driver = self.initiate_chrome(headless_mode=headless_mode)
+        driver.get(url)
+        self.click_privacy_option(driver)
 
-            while True:
-                try:
-                    self.load_element(driver, (By.CLASS_NAME, "audience-review-row"))
-                    page_source = BeautifulSoup(driver.page_source, "html.parser")
-                    review_blocks = page_source.find_all(
-                        "div", class_="audience-review-row"
-                    )
-                    total_review_blocks += review_blocks
-                    self.load_next(driver, (By.CLASS_NAME, "next"))
-                except (
-                    TimeoutException,
-                    NoSuchElementException,
-                    ElementNotInteractableException,
-                ):
-                    break
+        while True:
+            try:
+                self.load_element(driver, (By.CLASS_NAME, "audience-review-row"))
+                page_source = BeautifulSoup(driver.page_source, "html.parser")
+                review_blocks = page_source.find_all(
+                    "div", class_="audience-review-row"
+                )
+                total_review_blocks += review_blocks
+                self.load_next(driver, (By.CLASS_NAME, "next"))
+            except (
+                TimeoutException,
+                NoSuchElementException,
+                ElementNotInteractableException,
+            ):
+                break
+
+        driver.quit()
 
         return total_review_blocks
 

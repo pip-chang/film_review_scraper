@@ -4,9 +4,12 @@ from typing import List, Optional, Union
 import re
 
 from bs4 import BeautifulSoup
-from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import (
+    TimeoutException,
+    NoSuchElementException,
+    ElementNotInteractableException,
+)
 
 from .base import Website
 
@@ -31,20 +34,29 @@ class IMDBReview:
 
 
 class IMDB(Website):
-    def fetch_reviews(self, url: str) -> List[BeautifulSoup]:
+    def fetch_reviews(
+        self, url: str, headless_mode: bool = False
+    ) -> List[BeautifulSoup]:
         total_review_blocks = []
-        with Chrome() as driver:
-            driver.get(url)
-            while True:
-                try:
-                    self.load_next(driver, (By.CLASS_NAME, "ipl-load-more__button"))
-                except TimeoutException:
-                    break
-            self.load_element(driver, (By.CLASS_NAME, "imdb-user-review"))
-            page_source = BeautifulSoup(driver.page_source, "html.parser")
-            total_review_blocks = page_source.find_all(
-                "div", class_=re.compile("imdb-user-review")
-            )
+        driver = self.initiate_chrome(headless_mode=headless_mode)
+        driver.get(url)
+
+        while True:
+            try:
+                self.load_next(driver, (By.CLASS_NAME, "ipl-load-more__button"))
+            except (
+                TimeoutException,
+                NoSuchElementException,
+                ElementNotInteractableException,
+            ):
+                break
+        self.load_element(driver, (By.CLASS_NAME, "imdb-user-review"))
+        page_source = BeautifulSoup(driver.page_source, "html.parser")
+        total_review_blocks = page_source.find_all(
+            "div", class_=re.compile("imdb-user-review")
+        )
+
+        driver.quit()
 
         return total_review_blocks
 
