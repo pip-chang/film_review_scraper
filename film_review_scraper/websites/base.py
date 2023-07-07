@@ -24,21 +24,30 @@ logging.basicConfig(level=logging.INFO)
 ScrapedReviewType = TypeVar("ScrapedReviewType")
 ParsedReviewType = TypeVar("ParsedReviewType")
 
-WAIT_TIME_LOAD = 30
-WAIT_TIME_CLICK = 10
+WAIT_TIME_LOAD = 10
+WAIT_TIME_CLICK = 20
 MIN_SLEEP = 1
 MAX_SLEEP = 10
 
 
 class Website(ABC, Generic[ScrapedReviewType, ParsedReviewType]):
-    @staticmethod
-    def remove_duplicates(
-        parsed_reviews: List[ParsedReviewType],
-    ) -> List[ParsedReviewType]:
-        pass
+    """
+    A base class for specific website scrapers. This class is expected to be
+    subclassed with methods implemented for each specific website's HTML structure.
+    """
 
     @staticmethod
     def initiate_chrome(headless_mode: bool) -> Chrome:
+        """
+        Initializes the Chrome driver with the given mode.
+
+        Args:
+            headless_mode (bool): A flag indicating whether to initiate the Chrome
+                                  driver in headless mode.
+
+        Returns:
+            driver (Chrome): The initialized Chrome driver.
+        """
         chrome_options = Options()
         if headless_mode:
             chrome_options.add_argument("--headless=new")
@@ -54,6 +63,17 @@ class Website(ABC, Generic[ScrapedReviewType, ParsedReviewType]):
 
     @staticmethod
     def load_element(driver: Chrome, locator: Tuple[By, str]):
+        """
+        Loads a web element in the provided driver using the locator.
+
+        Args:
+            driver (Chrome): The Chrome driver to use for loading the element.
+            locator (Tuple[By, str]): The locator for the element to be loaded.
+
+        Raises:
+            TimeoutException: If the element was not loaded within the defined wait time.
+            NoSuchElementException: If the element could not be found.
+        """
         try:
             WebDriverWait(driver, WAIT_TIME_LOAD).until(
                 EC.presence_of_element_located(locator)
@@ -66,10 +86,20 @@ class Website(ABC, Generic[ScrapedReviewType, ParsedReviewType]):
             raise
         except Exception as e:
             logging.error(f"An unexpected error occurred: {e}")
-            raise
 
     @staticmethod
     def load_next(driver: Chrome, locator: Tuple[By, str]):
+        """
+        Loads the next page of a multi-page website.
+
+        Args:
+            driver (Chrome): The Chrome driver to use for loading the next page.
+            locator (Tuple[By, str]): The locator for the 'next' button.
+
+        Raises:
+            TimeoutException: If the next page was not loaded within the defined wait time.
+            NoSuchElementException, ElementNotInteractableException: If the 'next' button could not be found or interacted with.
+        """
         try:
             current_page_source = driver.page_source
             WebDriverWait(driver, WAIT_TIME_CLICK).until(
@@ -90,14 +120,33 @@ class Website(ABC, Generic[ScrapedReviewType, ParsedReviewType]):
             raise
         except Exception as e:
             logging.error(f"An unexpected error occurred: {e}")
-            raise
 
     @abstractmethod
     def fetch_reviews(self, url: str) -> List[ScrapedReviewType]:
+        """
+        Fetches review data from the given URL. This is an abstract method that must
+        be implemented in each subclass.
+
+        Args:
+            url (str): The URL to scrape reviews from.
+
+        Returns:
+            List[ScrapedReviewType]: A list of scraped review data.
+        """
         pass
 
     @abstractmethod
     def parse_reviews(
         self, review_blocks: List[ScrapedReviewType]
     ) -> List[ParsedReviewType]:
+        """
+        Parses a list of scraped review data blocks. This is an abstract method that
+        must be implemented in each subclass.
+
+        Args:
+            review_blocks (List[ScrapedReviewType]): The list of scraped review data blocks to parse.
+
+        Returns:
+            List[ParsedReviewType]: A list of parsed review data.
+        """
         pass

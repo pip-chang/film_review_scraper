@@ -1,3 +1,3 @@
-from .imdb import IMDB
-from .rottentomatoes import RottenTomatoes
-from .douban import Douban
+from .imdb import IMDB, IMDBReview
+from .rottentomatoes import RottenTomatoes, RottenTomatoesReview
+from .douban import Douban, DoubanReview

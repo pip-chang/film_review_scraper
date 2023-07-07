@@ -5,4 +5,5 @@ from .file_handler import (
     read_html_to_soup,
     read_jsonl_to_dict,
     get_files_in_folder,
+    save_dicts_to_jsonl,
 )
