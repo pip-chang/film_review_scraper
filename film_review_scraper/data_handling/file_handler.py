@@ -1,6 +1,6 @@
 from pathlib import Path
 from bs4 import BeautifulSoup
-from typing import Dict, Union, Optional, Type, List, is_typeddict
+from typing import Dict, Union, Optional, Type, List
 from dataclasses import asdict, is_dataclass
 import json
 
@@ -102,7 +102,7 @@ def save_dicts_to_jsonl(list_of_dicts: List[Dict], output_path: Path) -> None:
     """
     with output_path.open(mode="a+", encoding="utf-8") as file:
         for dictionary in list_of_dicts:
-            if not is_typeddict(dictionary):
+            if not isinstance(dictionary, dict):
                 raise TypeError(f"Object {dictionary} is not a dict.")
             jsonline = json.dumps(dictionary, ensure_ascii=False)
             file.write(jsonline + "\n")

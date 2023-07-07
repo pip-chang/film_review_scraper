@@ -82,25 +82,30 @@ def export_all_data_to_jsonl(input_folder: str, output_folder: str, file_name: s
 
 
 if __name__ == "__main__":
-    # download
-    imdb_download(film_name=FILM_NAME, url=IMDB_URL, output_folder=REVIEW_OUTPUT_FOLDER)
-    rt_download(film_name=FILM_NAME, url=IMDB_URL, output_folder=REVIEW_OUTPUT_FOLDER)
-    db_download(
-        review_type="short",
-        film_name=FILM_NAME,
-        url=IMDB_URL,
-        output_folder=REVIEW_OUTPUT_FOLDER,
-    )
-    db_download(
-        review_type="long",
-        film_name=FILM_NAME,
-        url=IMDB_URL,
-        output_folder=REVIEW_OUTPUT_FOLDER,
-    )
+    if False:
+        # download
+        imdb_download(
+            film_name=FILM_NAME, url=IMDB_URL, output_folder=REVIEW_OUTPUT_FOLDER
+        )
+        rt_download(
+            film_name=FILM_NAME, url=IMDB_URL, output_folder=REVIEW_OUTPUT_FOLDER
+        )
+        db_download(
+            review_type="short",
+            film_name=FILM_NAME,
+            url=IMDB_URL,
+            output_folder=REVIEW_OUTPUT_FOLDER,
+        )
+        db_download(
+            review_type="long",
+            film_name=FILM_NAME,
+            url=IMDB_URL,
+            output_folder=REVIEW_OUTPUT_FOLDER,
+        )
 
-    # merge
-    export_all_data_to_jsonl(
-        input_folder=REVIEW_OUTPUT_FOLDER,
-        output_folder=REVIEW_OUTPUT_FOLDER,
-        file_name="the_last_tycoon",
-    )
+        # merge
+        export_all_data_to_jsonl(
+            input_folder=REVIEW_OUTPUT_FOLDER,
+            output_folder=REVIEW_OUTPUT_FOLDER,
+            file_name="the_last_tycoon",
+        )
