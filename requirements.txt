@@ -1,4 +1,6 @@
 beautifulsoup4==4.12.2
-selenium
-pyyaml
-webdriver-manager
+pytest==7.2.1
+PyYAML==6.0
+requests==2.31.0
+selenium==4.10.0
+webdriver_manager==3.8.6

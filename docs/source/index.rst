@@ -10,6 +10,9 @@ Welcome to film_review_scraper's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   readme_link
+   modules
+   license_link
 
 
 Indices and tables

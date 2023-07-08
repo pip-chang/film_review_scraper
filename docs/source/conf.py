@@ -6,6 +6,11 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
+import os
+import sys
+
+sys.path.insert(0, os.path.abspath("../film_review_scraper/"))
+
 project = "film_review_scraper"
 copyright = "2023, Jianghan Chang"
 author = "Jianghan Chang"
@@ -14,7 +19,11 @@ release = "1.0"
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = []
+extensions = [
+    "sphinx.ext.autodoc",
+    "myst_parser",
+    "sphinx.ext.napoleon",
+]
 
 templates_path = ["_templates"]
 exclude_patterns = []

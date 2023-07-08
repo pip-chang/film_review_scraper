@@ -1,16 +1,46 @@
-# Collect Reviews from Multiple Websites
+# Film Review Scraper
+
+The film_review_scraper is a Python library for scraping and storing film reviews from various websites.
+
+Currently working websites: [IMDB](https://www.imdb.com/), [RottenTomatoes](https://www.rottentomatoes.com/), [Douban](https://movie.douban.com/)
+
+## Installation
+
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install film_review_scraper.
+
+```bash
+pip install foobar
+```
+
+## Usage
+
+```python
+import foobar
+
+# returns 'words'
+foobar.pluralize('word')
+
+# returns 'geese'
+foobar.pluralize('goose')
+
+# returns 'phenomenon'
+foobar.singularize('phenomena')
+```
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first
+to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
 
 # TODO
 
 write instructions on how to use library 'pip install -e .'
-
-scaling issue - timeout retries, checkpoints
-
-tests
-
-docs
-
-better pipeline
 
 # Description
 
