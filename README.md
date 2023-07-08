@@ -24,7 +24,7 @@ reviews = website.parse_reviews(website.fetch_reviews("https://www.imdb.com/titl
 
 ## Usage
 
-Please refer to the [demonstartion]("demonstration.ipynb") for detailed usage.
+Please refer to the [demonstartion]("./demonstration.ipynb") for detailed usage.
 
 ## Contributing
 
@@ -38,7 +38,6 @@ Please make sure to update tests as appropriate.
 [MIT](https://choosealicense.com/licenses/mit/)
 
 ## Upcoming Updates:
-
-IMDB critic reviews with external links
-Rotten Tomatoes critic reviews with external links
-Douban discussion threads
+[ ] IMDB critic reviews with external links
+[ ] Rotten Tomatoes critic reviews with external links
+[ ] Douban discussion threads
