@@ -15,7 +15,7 @@ pip install film_review_scraper
 ## Quick Start
 
 ```python
-import film_review_scraper
+from film_review_scraper import IMDB
 
 website = IMDB()
 
