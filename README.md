@@ -26,6 +26,10 @@ reviews = website.parse_reviews(website.fetch_reviews("https://www.imdb.com/titl
 
 Please refer to the [demonstration](https://nbviewer.org/github/pip-chang/film_review_scraper/blob/main/demonstration.ipynb) for detailed usage.
 
+## Documentation
+
+ReadTheDocs: [film_review_scraper](https://film-review-scraper.readthedocs.io/en/latest/)
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first
