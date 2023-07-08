@@ -24,7 +24,7 @@ reviews = website.parse_reviews(website.fetch_reviews("https://www.imdb.com/titl
 
 ## Usage
 
-Please refer to the [demonstartion](./demonstration.ipynb) for detailed usage.
+Please refer to the [demonstration](https://nbviewer.org/github/pip-chang/film_review_scraper/blob/main/demonstration.ipynb) for detailed usage.
 
 ## Contributing
 
