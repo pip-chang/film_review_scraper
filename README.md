@@ -39,5 +39,7 @@ Please make sure to update tests as appropriate.
 
 ## Upcoming Updates:
 [ ] IMDB critic reviews with external links
+
 [ ] Rotten Tomatoes critic reviews with external links
+
 [ ] Douban discussion threads
