@@ -2,7 +2,7 @@
 
 The film_review_scraper is a Python library for scraping and storing film reviews from various websites.
 
-Currently supported websites: [IMDB]('https://www.imdb.com/'), [RottenTomatoes]('https://www.rottentomatoes.com/'), [Douban]('https://movie.douban.com/')
+Currently supported websites: [IMDB](https://www.imdb.com/), [RottenTomatoes](https://www.rottentomatoes.com/), [Douban](https://movie.douban.com/)
 
 ## Installation
 
@@ -24,7 +24,7 @@ reviews = website.parse_reviews(website.fetch_reviews("https://www.imdb.com/titl
 
 ## Usage
 
-Please refer to the [demonstartion]("./demonstration.ipynb") for detailed usage.
+Please refer to the [demonstartion](./demonstration.ipynb) for detailed usage.
 
 ## Contributing
 
