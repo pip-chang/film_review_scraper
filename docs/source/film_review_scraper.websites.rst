@@ -20,18 +20,18 @@ film\_review\_scraper.websites.douban module
    :undoc-members:
    :show-inheritance:
 
-film\_review\_scraper.websites.imdb module
-------------------------------------------
+websites.imdb module
+--------------------
 
-.. automodule:: film_review_scraper.websites.imdb
+.. automodule:: websites.imdb
    :members:
    :undoc-members:
    :show-inheritance:
 
-film\_review\_scraper.websites.rottentomatoes module
-----------------------------------------------------
+websites.rottentomatoes module
+------------------------------
 
-.. automodule:: film_review_scraper.websites.rottentomatoes
+.. automodule:: websites.rottentomatoes
    :members:
    :undoc-members:
    :show-inheritance:
@@ -39,7 +39,7 @@ film\_review\_scraper.websites.rottentomatoes module
 Module contents
 ---------------
 
-.. automodule:: film_review_scraper.websites
+.. automodule:: websites
    :members:
    :undoc-members:
    :show-inheritance:

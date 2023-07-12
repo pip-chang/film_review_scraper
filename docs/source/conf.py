@@ -9,7 +9,7 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath("../film_review_scraper/"))
+sys.path.insert(0, os.path.abspath("../../film_review_scraper/"))
 
 project = "film_review_scraper"
 copyright = "2023, Jianghan Chang"

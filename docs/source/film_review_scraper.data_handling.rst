@@ -1,13 +1,13 @@
-film\_review\_scraper.data\_handling package
-============================================
+data\_handling package
+======================
 
 Submodules
 ----------
 
-film\_review\_scraper.data\_handling.file\_handler module
----------------------------------------------------------
+data\_handling.file\_handler module
+-----------------------------------
 
-.. automodule:: film_review_scraper.data_handling.file_handler
+.. automodule:: data_handling.file_handler
    :members:
    :undoc-members:
    :show-inheritance:
@@ -15,7 +15,7 @@ film\_review\_scraper.data\_handling.file\_handler module
 Module contents
 ---------------
 
-.. automodule:: film_review_scraper.data_handling
+.. automodule:: data_handling
    :members:
    :undoc-members:
    :show-inheritance:
